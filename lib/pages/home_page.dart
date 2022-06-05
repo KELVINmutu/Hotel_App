@@ -1,16 +1,24 @@
 import 'package:bwa_cozy/models/city.dart';
 import 'package:bwa_cozy/models/space.dart';
 import 'package:bwa_cozy/models/tips.dart';
+import 'package:bwa_cozy/notification_handler.dart';
 import 'package:bwa_cozy/pages/splash_page.dart';
 import 'package:bwa_cozy/providers/space_provider.dart';
 import 'package:bwa_cozy/theme.dart';
 import 'package:bwa_cozy/widgets/city_card.dart';
 import 'package:bwa_cozy/widgets/space_card.dart';
 import 'package:bwa_cozy/widgets/tips_card.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:bwa_cozy/main.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+import '../auth.dart';
+import 'login_page.dart';
 
 class HomePage extends StatefulWidget {
   final String nama;
@@ -20,6 +28,71 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    var initializationSettingAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+    var initializationSetting =
+        InitializationSettings(android: initializationSettingAndroid);
+    flutterLocalNotificationsPlugin.initialize(initializationSetting);
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      // debugPrint("true");
+      // debugPrint("Kamu menerima pesan! ${message.notification?.title}");
+      // debugPrint("${message.notification?.body}");
+      // RemoteNotification notification = message.notification;
+      // AndroidNotification android = message.notification?.android;
+      // print(notification);
+      // print(android);
+      // if (notification != null && android != null) {
+      //   // ignore: missing_return
+      //   showDialog(
+      //       builder: (_) {
+      //         return AlertDialog(
+      //           title: Text(notification.title),
+      //           content: SingleChildScrollView(
+      //             child: Column(
+      //               crossAxisAlignment: CrossAxisAlignment.start,
+      //               children: [Text(notification.body)],
+      //             ),
+      //           ),
+      //         );
+      //       },
+      //       context: null);
+      // }
+      //  await Firebase.initializeApp();
+      debugPrint("Kamu menerima pesan! ${message.notification?.title}");
+      debugPrint("${message.notification?.body}");
+      RemoteNotification notification = message.notification;
+      AndroidNotification android = message.notification?.android;
+      if (notification != null && android != null) {
+        flutterLocalNotificationsPlugin.show(
+          notification.hashCode,
+          notification.title,
+          notification.body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              channel.id,
+              channel.name,
+              icon: android?.smallIcon,
+              // color: Colors.red,
+              playSound: true,
+              // priority: Priority.max,
+              // importance: Importance.max,
+            ),
+          ),
+        );
+      }
+      // showSimpleNotification(
+      //   Text(notification.title),
+      //   subtitle: Text(notification.body),
+      //   background: Colors.blue,
+      //   duration: Duration(seconds: 3),
+      // );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     var spaceProvider = Provider.of<SpaceProvider>(context);
@@ -69,11 +142,24 @@ class _HomePageState extends State<HomePage> {
                   margin: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
                   child: GestureDetector(
                     onTap: () async {
-                      SharedPreferences prefs =
-                          await SharedPreferences.getInstance();
-                      prefs.remove('isUser');
-                      Navigator.pushReplacement(
-                          context, MaterialPageRoute(builder: (c) => MyApp()));
+                      AuthenticationService service =
+                          AuthenticationService(FirebaseAuth.instance);
+                      bool res = await service.logout();
+                      if (res) {
+                        final prefs = await SharedPreferences.getInstance();
+                        await prefs.remove("isUser");
+                        await prefs.remove("user_id");
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => LoginScreen()),
+                        );
+                      }
+                      //   SharedPreferences prefs =
+                      //       await SharedPreferences.getInstance();
+                      //   prefs.remove('isUser');
+                      //   Navigator.pushReplacement(
+                      //       context, MaterialPageRoute(builder: (c) => MyApp()));
                     },
                     //() => {
                     // Navigator.push(context,MaterialPageRoute(builder: (context) => SplashPage()))

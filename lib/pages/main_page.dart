@@ -1,7 +1,11 @@
+import 'package:bwa_cozy/notification_handler.dart';
 import 'package:bwa_cozy/pages/chat_page.dart';
 import 'package:bwa_cozy/pages/email_page.dart';
 import 'package:bwa_cozy/pages/home_page.dart';
 import 'package:bwa_cozy/pages/wishlist_page.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,27 +17,35 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  FirebaseAnalytics analytics = FirebaseAnalytics.instance;
   int currentIndex = 0;
   var getname = "";
   getName() async {
     final prefs = await SharedPreferences.getInstance();
-    if (prefs.getInt("user_id") != null) {
-      var id = prefs.getInt("user_id");
-      var data = DummyData.data;
-      for (var item in data) {
-        if (item.containsValue(id)) {
-          setState(() {
-            getname = item['nama'];
-            print(getname);
-          });
-        }
-      }
+    // if (prefs.getInt("user_id") != null) {
+    //   var id = prefs.getInt("user_id");
+    //   var data = DummyData.data;
+    //   for (var item in data) {
+    //     if (item.containsValue(id)) {
+    //       setState(() {
+    //         getname = item['nama'];
+    //         print(getname);
+    //       });
+    //     }
+    //   }
+    // }
+    if (prefs.getString("displayName") != null) {
+      var displayName = prefs.getString("displayName");
+      setState(() {
+        getname = displayName.toString();
+      });
     }
   }
 
   @override
   void initState() {
     super.initState();
+    // FirebaseMessaging.onMessage.listen(RemoteMessage message ());
     getName();
   }
 

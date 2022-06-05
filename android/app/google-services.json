@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "837886467671",
-    "project_id": "bwa-cozy-3c89d",
-    "storage_bucket": "bwa-cozy-3c89d.appspot.com"
+    "project_number": "1016790110313",
+    "project_id": "hotelmutu",
+    "storage_bucket": "hotelmutu.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:837886467671:android:774fccd425d3b4566d8d12",
+        "mobilesdk_app_id": "1:1016790110313:android:c07340810814b3e77cd2f8",
         "android_client_info": {
           "package_name": "com.example.bwa_cozy"
         }
       },
       "oauth_client": [
         {
-          "client_id": "837886467671-80b1qt2g3tnc8u3trpvu4b168jd3gel9.apps.googleusercontent.com",
+          "client_id": "1016790110313-89tg2rd861nqvvvpjptbm7u3l7qipevl.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDs0GAWFjE2wSCqH4W6zgCD6Mr_scg7NMo"
+          "current_key": "AIzaSyC_7gQvVHsC9JO7sdqluHr2qmreFdTpHPw"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "837886467671-80b1qt2g3tnc8u3trpvu4b168jd3gel9.apps.googleusercontent.com",
+              "client_id": "1016790110313-89tg2rd861nqvvvpjptbm7u3l7qipevl.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

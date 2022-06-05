@@ -1,12 +1,29 @@
+import 'dart:ffi';
+
+import 'package:bwa_cozy/firebase_options.dart';
+import 'package:bwa_cozy/notification_handler.dart';
 import 'package:bwa_cozy/pages/splash_page.dart';
 import 'package:bwa_cozy/providers/space_provider.dart';
 import 'package:bwa_cozy/providers/wishlist_provider.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'pages/splash_page.dart';
 
-void main() {
+FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  await initializeNotification();
+  await flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>()
+      ?.createNotificationChannel(channel);
+  await onTerminated();
   runApp(MyApp());
 }
 
@@ -27,9 +44,11 @@ class _MyAppState extends State<MyApp> {
           create: (context) => WishlistProvider(),
         ),
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: SplashPage(),
+      child: OverlaySupport.global(
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          home: SplashPage(),
+        ),
       ),
     );
   }

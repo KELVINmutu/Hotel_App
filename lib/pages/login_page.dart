@@ -1,8 +1,11 @@
+import 'package:bwa_cozy/auth.dart';
 import 'package:bwa_cozy/pages/main_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:bwa_cozy/models/background.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:bwa_cozy/models/dummy_data.dart';
+import 'register_page.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -10,8 +13,25 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  @override
+  void initState() {
+    super.initState();
+    loginCheck();
+  }
+
   TextEditingController _username = TextEditingController();
   TextEditingController _pass = TextEditingController();
+  loginCheck() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    if (prefs.getBool("isUser") != null && prefs.getBool("isUser") == true) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => MainPage()),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -38,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
               margin: EdgeInsets.symmetric(horizontal: 40),
               child: TextField(
                 controller: _username,
-                decoration: InputDecoration(labelText: "Username"),
+                decoration: InputDecoration(labelText: "Username/email"),
               ),
             ),
             SizedBox(height: size.height * 0.03),
@@ -72,8 +92,24 @@ class _LoginScreenState extends State<LoginScreen> {
                   padding: const EdgeInsets.all(0),
                 ),
                 child: GestureDetector(
-                  onTap:
-                      _login, //() => {Navigator.push(context,MaterialPageRoute(builder: (context) => MainPage()))},
+                  onTap: () async {
+                    AuthenticationService service =
+                        AuthenticationService(FirebaseAuth.instance);
+                    bool res = await service.signIn(
+                        email: _username.text, password: _pass.text);
+                    if (res) {
+                      final prefs = await SharedPreferences.getInstance();
+                      var user = await service.getCurrentUser();
+                      prefs.setBool("isUser", true);
+                      prefs.setString("displayName", user.displayName);
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => MainPage()),
+                      );
+                    }
+                  },
+
+                  // _login, //() => {Navigator.push(context,MaterialPageRoute(builder: (context) => MainPage()))},
                   child: Container(
                     alignment: Alignment.center,
                     height: 50.0,
@@ -96,8 +132,14 @@ class _LoginScreenState extends State<LoginScreen> {
               alignment: Alignment.centerRight,
               margin: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
               child: GestureDetector(
-                onTap: () => {
-                  //Navigator.push(context,MaterialPageRoute(builder: (context) => ))
+                // onTap: () => {
+                //   //Navigator.push(context,MaterialPageRoute(builder: (context) => ))
+                // },
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => RegisterScreen()),
+                  );
                 },
                 child: Text(
                   "Don't Have an Account? Sign up",
