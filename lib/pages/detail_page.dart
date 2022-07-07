@@ -1,5 +1,7 @@
 import 'package:bwa_cozy/models/space.dart';
 import 'package:bwa_cozy/pages/error_page.dart';
+import 'package:bwa_cozy/pages/main_page.dart';
+import 'package:bwa_cozy/pages/update_page.dart';
 import 'package:bwa_cozy/providers/wishlist_provider.dart';
 import 'package:bwa_cozy/theme.dart';
 import 'package:bwa_cozy/widgets/facility_item.dart';
@@ -7,12 +9,14 @@ import 'package:bwa_cozy/widgets/rating_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:bwa_cozy/providers/post_provider.dart';
 
 class DetailPage extends StatelessWidget {
   final Space space;
   DetailPage(this.space);
   @override
   Widget build(BuildContext context) {
+    PostProvider postProvider = Provider.of<PostProvider>(context);
     WishlistProvider wishlistProvider = Provider.of<WishlistProvider>(context);
     _launchURL(String url) async {
       if (await canLaunch(url)) {
@@ -160,41 +164,41 @@ class DetailPage extends StatelessWidget {
                         height: 30,
                       ),
                       //NOTE: PHOTO
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: edge,
-                        ),
-                        child: Text(
-                          'Photos',
-                          style: regularTextStyle.copyWith(
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 12,
-                      ),
-                      Container(
-                        height: 88,
-                        child: ListView(
-                            scrollDirection: Axis.horizontal,
-                            children: space.photos.map((item) {
-                              return Container(
-                                margin: EdgeInsets.only(
-                                  left: 24,
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(16),
-                                  child: Image.network(
-                                    item,
-                                    width: 110,
-                                    height: 88,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              );
-                            }).toList()),
-                      ),
+                      // Padding(
+                      //   padding: EdgeInsets.only(
+                      //     left: edge,
+                      //   ),
+                      //   child: Text(
+                      //     'Photos',
+                      //     style: regularTextStyle.copyWith(
+                      //       fontSize: 16,
+                      //     ),
+                      //   ),
+                      // ),
+                      // SizedBox(
+                      //   height: 12,
+                      // ),
+                      // Container(
+                      //   height: 88,
+                      //   child: ListView(
+                      //       scrollDirection: Axis.horizontal,
+                      //       children: space.photos.map((item) {
+                      //         return Container(
+                      //           margin: EdgeInsets.only(
+                      //             left: 24,
+                      //           ),
+                      //           child: ClipRRect(
+                      //             borderRadius: BorderRadius.circular(16),
+                      //             child: Image.network(
+                      //               item,
+                      //               width: 110,
+                      //               height: 88,
+                      //               fit: BoxFit.cover,
+                      //             ),
+                      //           ),
+                      //         );
+                      //       }).toList()),
+                      // ),
                       SizedBox(
                         height: 30,
                       ),
@@ -288,6 +292,23 @@ class DetailPage extends StatelessWidget {
                       'assets/btn_back.png',
                       width: 40,
                     ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      postProvider.delete(space.id);
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => MainPage()));
+                    },
+                    child: Icon(Icons.delete),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => getPage(space)));
+                    },
+                    child: Icon(Icons.update),
                   ),
                   GestureDetector(
                     onTap: () {

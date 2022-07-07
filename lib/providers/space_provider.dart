@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 class SpaceProvider extends ChangeNotifier {
   getRecommendedSpaces() async {
     var result = await http.get(
-      Uri.parse('https://bwa-cozy.herokuapp.com/recommended-spaces'),
+      Uri.parse('https://staycozyhotel.herokuapp.com/hotel'),
     );
 
     print(result.statusCode);

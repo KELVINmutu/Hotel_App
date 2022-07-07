@@ -1,6 +1,6 @@
 import 'package:bwa_cozy/notification_handler.dart';
 import 'package:bwa_cozy/pages/chat_page.dart';
-import 'package:bwa_cozy/pages/email_page.dart';
+import 'package:bwa_cozy/pages/create_page.dart';
 import 'package:bwa_cozy/pages/home_page.dart';
 import 'package:bwa_cozy/pages/wishlist_page.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -135,7 +135,7 @@ class _MainPageState extends State<MainPage> {
           return ChatPage();
           break;
         case 2:
-          return EmailPage();
+          return CreatePage();
           break;
         case 3:
           return WishlistPage();

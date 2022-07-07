@@ -13,6 +13,7 @@ import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'pages/splash_page.dart';
+import 'providers/post_provider.dart';
 
 FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 Future<void> main() async {
@@ -42,6 +43,9 @@ class _MyAppState extends State<MyApp> {
         ),
         ChangeNotifierProvider(
           create: (context) => WishlistProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => PostProvider(),
         ),
       ],
       child: OverlaySupport.global(

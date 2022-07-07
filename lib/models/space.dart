@@ -1,5 +1,5 @@
 class Space {
-  int id;
+  String id;
   String name;
   String imageUrl;
   int price;
@@ -9,7 +9,7 @@ class Space {
   String address;
   String phone;
   String mapUrl;
-  List photos;
+  // List photos;
   int numberOfKitchens;
   int numberOfBedrooms;
   int numberOfCupboards;
@@ -28,7 +28,7 @@ class Space {
     this.numberOfCupboards,
     this.numberOfKitchens,
     this.phone,
-    this.photos,
+    // this.photos,
   });
 
   Space.fromJson(json) {
@@ -42,7 +42,7 @@ class Space {
     address = json['address'];
     phone = json['phone'];
     mapUrl = json['map_url'];
-    photos = json['photos'];
+    // photos = json['photos'];
     numberOfBedrooms = json['number_of_bedrooms'];
     numberOfCupboards = json['number_of_cupboards'];
     numberOfKitchens = json['number_of_kitchens'];
